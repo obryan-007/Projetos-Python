@@ -1,0 +1,31 @@
+Aqui vai algumas dicas na hora de programar, vai que eu acabe esquecendo!!!
+
+Variável: Serve para armazenar algum valor do tipo "string" e "int/float". Ex: nome = "Bryan"
+string: texto formatado 
+int: número inteiro
+float: número decimal
+while: é um laço de repetição
+try e except: serve para proteger o sistema de alguma falha, try = tente, except = exceto.
+if, elif e else: "se", "se não" ou "caso contrario".
+
+random: lembre-se de sempre usa o "import" para importar da biblioteca do Python
+random.randint: serve para escolher números aleátorios. Ex: rand = de random. int = int 
+de número inteiro
+random.choice(): aqui serve para escolher um item dentro de uma lista de forma aleatória, lembrando
+que a váriavel que tenha a lista deve estar dentro de ().
+
+enumerate: serve para listar uma ordem de objetos dentro de um dicionário 
+(podemos usar o "start=1") para começar uma lista no número 1
+
+Ordem de precedência:
+1 = ()
+2 = **
+3 = *, /, //, %
+4 = +, -
+
+Raiz quadrada: ** (1/2)
+
+def funcao(): serve para criar funcoes, ajudando a manter o código limpo e organizado.
+.replace: serve para trocar algo por outro item. Tem que estar dentro do print, ex:
+print("Olá!".replace("!", "."))
+Primeiro vem o que você quer trocar, depois o item que você deseja colocar
