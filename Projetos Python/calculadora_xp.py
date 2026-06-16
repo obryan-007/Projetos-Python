@@ -139,47 +139,63 @@ def linha():
     print(30*"-")
 
 def descobrir_level():
-    linha()
-    xp_atual = int(input("Digite seu XP atual: "))
-    for level, xp in xp_levels.items():
-        if xp_atual >= xp:
-            level_atual = level
-    xp_inicial_level = xp_levels[level_atual]
-    xp_final_level = xp_levels[level_atual + 1]
-    xp_ganho = xp_atual - xp_inicial_level
-    xp_total = xp_final_level - xp_inicial_level 
-    progresso = (xp_ganho/xp_total) * 100
-    print(f"\nLevel: {level_atual}")
-    print(f"XP restante para o level {level_atual + 1}: {xp_final_level - xp_atual}")
-    print(f"Progresso: {progresso:.1f}%")
-    print(f"Restante: {100 - progresso:.1f}%")
-    linha()
-    return xp_atual, level_atual, xp_final_level, xp_total, xp_inicial_level
+    try:
+        linha()
+        xp_atual = int(input("Digite seu XP atual: "))
+        for level, xp in xp_levels.items():
+            if xp_atual >= xp:
+                level_atual = level
+        if xp_atual >= 4536153492:
+            print("Level máximo atingido!")
+            return xp_atual, None, None, None, None
+        else:
+            xp_inicial_level = xp_levels[level_atual]
+            xp_final_level = xp_levels[level_atual + 1]
+            xp_ganho = xp_atual - xp_inicial_level
+            xp_total = xp_final_level - xp_inicial_level 
+            progresso = (xp_ganho/xp_total) * 100
+            print(f"\nLevel: {level_atual}")
+            print(f"XP restante para o level {level_atual + 1}: {xp_final_level - xp_atual}")
+            print(f"Progresso: {progresso:.1f}%")
+            print(f"Restante: {100 - progresso:.1f}%")
+            linha()
+            return xp_atual, level_atual, xp_final_level, xp_total, xp_inicial_level
+    except:
+        print("Somente números válidos!")
+        return None, None, None, None, None
 
 
 def monstros_restantes(xp_final_level, xp_atual):
-    linha()
-    xp_mob = int(input("Digite o XP do Monstro: "))
-    mobs_restantes = (xp_final_level - xp_atual) / xp_mob
-    print(f"Monstros restantes: {mobs_restantes:.0f}")
-    linha()
+    try:  
+        linha()
+        xp_mob = int(input("Digite o XP do Monstro: "))
+        mobs_restantes = (xp_final_level - xp_atual) / xp_mob
+        print(f"Monstros restantes: {mobs_restantes:.0f}")
+        linha()
+    except:
+        print("Somente números válidos!")
+
 
 
 def meta_personalizada(xp_atual, xp_inicial_level, xp_total):
-    linha()
-    meta = float(input("Digite uma porcentagem desejada (Ex: 12.3): "))
-    xp_mob = int(input("Digite o XP do Monstro: "))
-    print("xp_atual =", xp_atual)
-    print("xp_inicial_level =", xp_inicial_level)
-    print("xp_total =", xp_total)
-    xp_ganho_dentro_do_level = xp_total * (meta / 100)
-    xp_total_necessario = xp_inicial_level + xp_ganho_dentro_do_level
-    xp_faltante = xp_total_necessario - xp_atual
-    mobs_restantes = (xp_faltante - xp_atual) / xp_mob
-    print(f"Meta: {meta}%")
-    print(f"XP restante: {xp_faltante:.0f}")
-    print(f"Monstros restantes: {mobs_restantes} ")
-    linha()
+    try:
+        linha()
+        meta = float(input("Digite uma porcentagem desejada (Ex: 12.3): "))
+        xp_mob = int(input("Digite o XP do Monstro: "))
+        print("xp_atual =", xp_atual)
+        print("xp_inicial_level =", xp_inicial_level)
+        print("xp_total =", xp_total)
+        xp_ganho_dentro_do_level = xp_total * (meta / 100)
+        xp_total_necessario = xp_inicial_level + xp_ganho_dentro_do_level
+        xp_faltante = xp_total_necessario - xp_atual
+        #mobs_restantes = (xp_final_level - xp_atual) / xp_mob
+        #mobs_restantes = (xp_faltante - xp_atual) / xp_mob
+        print(f"Meta: {meta}%")
+        print(f"XP restante: {xp_faltante:.0f}")
+        #print(f"Monstros restantes: {mobs_restantes} ")
+        linha()
+    except:
+        print("Somente números válidos!")
 
     
 def menu():
@@ -200,7 +216,7 @@ def menu():
             print("[4] - Sair")
             opcao = int(input("Selecione alguma opção acima: "))
         except:
-            print('Somente números!')
+            print('Opção inválida! Tente novamente.')
             continue
 
         match opcao:
@@ -210,7 +226,6 @@ def menu():
                 if xp_atual is None or xp_final_level is None:
                     print("\nPrimeiro, descubra seu level atual (Opção 1).")
                 else:
-                
                     monstros_restantes(xp_final_level, xp_atual)
             case 3:
                 if xp_atual is None:
