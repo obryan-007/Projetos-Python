@@ -1,3 +1,6 @@
+#Esse dicionário foi necessário, porque o sistema de levels dentro do jogo não tem um padrão de conta. 
+#Por isso, o dicionário ficou grande.
+
 xp_levels = {
     1: 0,
     2: 46,
@@ -119,6 +122,19 @@ xp_levels = {
     118: 3437761413,
     119: 3948950932,
     120: 4536153492
+} 
+
+skills = {
+    "Melee": 0, 
+    "Mage": 0, 
+    "Mining": 0, 
+    "Smithing": 0, 
+    "Woodcutting": 0, 
+    "Crafting": 0, 
+    "Fishing": 0, 
+    "Cooking": 0, 
+    "Spellbinding": 0, 
+    "Alchemy": 0, 
 }
 
 #CSCOA (Calculadora de Skill do CoA) 
@@ -133,22 +149,49 @@ xp_levels = {
 # Todo projeto grande é concluído uma etapa de cada vez.
 # ==================================================
 
-import math #Arredondar o número de mobs
+import math as m
 
 def linha():
     print(30*"-")
 
-def descobrir_level():
+#Pretendo criar um append para arquivos .txt para manter levels futuros salvos sem precisar 
+# digitar sempre que rodar o código
+def tabela_skills():
+    linha()
+    for skill, xp_skill in skills.items():
+        xp_da_skill = xp_skill
+        for level, xp in xp_levels.items():
+            if xp_da_skill >= xp:
+                level_atual = level
+        print(f"{skill}")
+        print(f"| XP: {xp_skill}")
+        print(f"| Level: {level_atual}")
+
+
+def selecionar_skill(skill_escolhida):
+    skills = ["Melee", "Mage", "Mining", "Smithing", "Woodcutting", 'Crafting', 'Fishing', 'Cooking', 'Spellbinding', 'Alchemy']
+    for num, skill in enumerate(skills, start=1):
+        print(f"{num} - {skill}")
+    skill_escolhida = str(input("Selecione uma skill: "))
+    if skill_escolhida not in skills:
+        print("Skill não existente! Tente novamente.")
+    return skill_escolhida
+
+
+def descobrir_level(skill_escolhida):
     try:
-        linha()
+        linha()    
         xp_atual = int(input("Digite seu XP atual: "))
+        #Percorre o dicionário para descobrir o level do usuário somente pelo xp digitado
         for level, xp in xp_levels.items():
             if xp_atual >= xp:
                 level_atual = level
+        #Condição para verificar se o xp não é maior do que o último level e retorna uma mensagem
         if xp_atual >= 4536153492:
             print("Level máximo atingido!")
             return xp_atual, None, None, None, None
         else:
+            skills[skill_escolhida] = xp_atual
             xp_inicial_level = xp_levels[level_atual]
             xp_final_level = xp_levels[level_atual + 1]
             xp_ganho = xp_atual - xp_inicial_level
@@ -164,17 +207,18 @@ def descobrir_level():
         print("Somente números válidos!")
         return None, None, None, None, None
 
-
+#Calcular quantos monstros faltam para o próximo level
 def monstros_restantes(xp_final_level, xp_atual):
     try:  
         linha()
         xp_mob = int(input("Digite o XP do Monstro: "))
         mobs_restantes = (xp_final_level - xp_atual) / xp_mob
-        print(f"Monstros restantes: {mobs_restantes:.0f}")
+        print(f"Monstros restantes: {m.math.ceil(mobs_restantes)}") #math.ceil para arredondar número de mobs
         linha()
+    except(ZeroDivisionError):
+        print("Erro: impossível dividir por 0")
     except:
         print("Somente números válidos!")
-
 
 
 def meta_personalizada(xp_atual, xp_inicial_level, xp_total):
@@ -182,17 +226,13 @@ def meta_personalizada(xp_atual, xp_inicial_level, xp_total):
         linha()
         meta = float(input("Digite uma porcentagem desejada (Ex: 12.3): "))
         xp_mob = int(input("Digite o XP do Monstro: "))
-        print("xp_atual =", xp_atual)
-        print("xp_inicial_level =", xp_inicial_level)
-        print("xp_total =", xp_total)
         xp_ganho_dentro_do_level = xp_total * (meta / 100)
         xp_total_necessario = xp_inicial_level + xp_ganho_dentro_do_level
         xp_faltante = xp_total_necessario - xp_atual
-        #mobs_restantes = (xp_final_level - xp_atual) / xp_mob
-        #mobs_restantes = (xp_faltante - xp_atual) / xp_mob
+        mobs_restantes = xp_faltante / xp_mob
         print(f"Meta: {meta}%")
         print(f"XP restante: {xp_faltante:.0f}")
-        #print(f"Monstros restantes: {mobs_restantes} ")
+        print(f"Monstros restantes: {m.math.ceil(mobs_restantes)} ") #math.ceil para arredondar número de mobs
         linha()
     except:
         print("Somente números válidos!")
@@ -203,6 +243,7 @@ def menu():
     xp_total = None
     xp_atual = None
     xp_final_level = None
+    skill_escolhida = "Não selecionado."
 
     while True:
     #Menu interativo
@@ -210,10 +251,13 @@ def menu():
             linha()
             print("       CALCULADORA COA")
             linha()
-            print("[1] - Descobrir level")
-            print("[2] - Calcular monstros")
-            print("[3] - Meta personalizada")
-            print("[4] - Sair")
+            print(f"Skill: {skill_escolhida}")
+            print("[1] - Selecionar Skill")
+            print("[2] - Descobrir level")
+            print("[3] - Calcular monstros")
+            print("[4] - Meta personalizada")
+            print("[5] - Tabela de Skills")
+            print("[6] - Sair")
             opcao = int(input("Selecione alguma opção acima: "))
         except:
             print('Opção inválida! Tente novamente.')
@@ -221,21 +265,29 @@ def menu():
 
         match opcao:
             case 1:
-                xp_atual, level_atual, xp_final_level, xp_total, xp_inicial_level = descobrir_level()
+                skill_escolhida = selecionar_skill()
             case 2:
-                if xp_atual is None or xp_final_level is None:
-                    print("\nPrimeiro, descubra seu level atual (Opção 1).")
+                if skill_escolhida == "Não selecionado.":
+                    print("Selecione alguma skill primeiro!")
                 else:
-                    monstros_restantes(xp_final_level, xp_atual)
+                    xp_atual, level_atual, xp_final_level, xp_total, xp_inicial_level = descobrir_level(skill_escolhida)
             case 3:
                 if xp_atual is None:
                     print("\nPrimeiro, descubra seu level atual (Opção 1).")
                 else:
-                    meta_personalizada(xp_atual, xp_inicial_level, xp_total)
+                    monstros_restantes(xp_final_level, xp_atual)
             case 4:
+                if xp_atual is None:
+                    print("\nPrimeiro, descubra seu level atual (Opção 1).")
+                else:
+                    meta_personalizada(xp_atual, xp_inicial_level, xp_total)
+            case 5:
+                tabela_skills()
+            case 6:
                 print("\nEncerrando programa...")
                 break
             case _:
                 print("Opção inválida! Tente novamente.")
-
+                
+    return skill_escolhida
 menu()
